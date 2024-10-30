@@ -121,15 +121,7 @@ const Signin = () => {
             </Button>
           </form>
         </Form>
-        {/* <Button
-          type="submit"
-          onClick={(e) => {
-            e.preventDefault();
-            const res = signIn("github");
-          }}
-        >
-          GITHUB
-        </Button> */}
+
         <div className="text-center mt-4">
           <p>
             Don&apos;t have an account?
