@@ -1,24 +1,20 @@
 import dbConnect from "@/lib/db.connect";
 import UserModel from "@/model/user.model";
-// import { z } from "zod";
 import { UsernameQuerySchema } from "@/schemas/signup.schema";
 
-// const UsernameQuerySchema = z.object({
-//   username: userNameValidation,
-// });
-
 export async function GET(request: Request) {
-  await dbConnect();
+  await dbConnect(); // Connect to the database
+
   try {
     const { searchParams } = new URL(request.url);
-    const queryParam = {
-      username: searchParams.get("username"),
-    };
-    // validate with zod
-    const result = UsernameQuerySchema.safeParse(queryParam);
+    const username = searchParams.get("username");
 
-    if (!result.success) {
-      const usernameErrors = result.error.format().username?._errors || [];
+    // Validate with Zod
+    const validationResult = UsernameQuerySchema.safeParse({ username });
+
+    if (!validationResult.success) {
+      const usernameErrors =
+        validationResult.error.format().username?._errors || [];
       return Response.json(
         {
           success: false,
@@ -31,20 +27,22 @@ export async function GET(request: Request) {
       );
     }
 
-    const { username } = result.data;
+    // Check if the username already exists
     const existingUser = await UserModel.findOne({
       username,
       isVerified: true,
     });
+
     if (existingUser) {
       return Response.json(
         {
           success: false,
-          message: "user with this username already exists.",
+          message: "User with this username already exists.",
         },
         { status: 400 }
       );
     }
+
     return Response.json({
       success: true,
       message: "Username is unique.",
