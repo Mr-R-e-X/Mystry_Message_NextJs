@@ -7,10 +7,12 @@ export async function GET(request: Request) {
 
   try {
     const { searchParams } = new URL(request.url);
-    const username = searchParams.get("username");
+    const queryParams = {
+      username: searchParams.get("username"),
+    };
 
     // Validate with Zod
-    const validationResult = UsernameQuerySchema.safeParse({ username });
+    const validationResult = UsernameQuerySchema.safeParse(queryParams);
 
     if (!validationResult.success) {
       const usernameErrors =
@@ -26,6 +28,7 @@ export async function GET(request: Request) {
         { status: 400 }
       );
     }
+    const { username } = validationResult.data;
 
     // Check if the username already exists
     const existingUser = await UserModel.findOne({
