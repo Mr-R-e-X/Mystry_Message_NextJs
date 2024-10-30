@@ -1,3 +1,4 @@
+import { messageReceived } from "@/helpers/verificationEmail";
 import dbConnect from "@/lib/db.connect";
 import UserModel from "@/model/user.model";
 import { Message } from "@/model/user.model";
@@ -26,12 +27,14 @@ export async function POST(request: Request) {
         { status: 403 }
       );
     }
+
     const newMessage = {
       content,
       createdAt: new Date(),
     };
     user.message.push(newMessage as Message);
     await user.save();
+    await messageReceived(username, content, user.email);
     return Response.json(
       { success: true, message: "Message sent successfully" },
       { status: 200 }

@@ -43,13 +43,22 @@ const Dahboard = () => {
     setIsSwitchLoading(true);
     try {
       const response = await axios.get<ApiResponse>("/api/accept-message");
-      if (response.status === 200) {
-        setValue("acceptMessages", response?.data?.isAcceptingMessages || true);
+      if (
+        response.data &&
+        typeof response.data.isAcceptingMessages === "boolean"
+      ) {
+        setValue("acceptMessages", response.data.isAcceptingMessages);
+        toast({
+          title: response.data.message || "Accept message button toggled",
+          variant: "default",
+        });
+      } else {
+        toast({
+          title: "Invalid response",
+          description: "Expected data format was not returned.",
+          variant: "destructive",
+        });
       }
-      toast({
-        title: response?.data.message || "Accept message button toggled",
-        variant: "default",
-      });
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;
       toast({
@@ -93,10 +102,15 @@ const Dahboard = () => {
   );
 
   useEffect(() => {
-    if (!session || !session.user) return;
-    fetchMessages();
-    fetchAcceptMessages();
-  }, [session, setValue, fetchMessages, fetchAcceptMessages]);
+    const fetchData = async () => {
+      if (!session || !session.user) return;
+
+      await fetchAcceptMessages();
+      await fetchMessages();
+    };
+
+    fetchData();
+  }, [session, fetchMessages, fetchAcceptMessages]);
 
   const handleSwitchChange = async () => {
     try {

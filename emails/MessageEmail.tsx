@@ -11,20 +11,15 @@ import {
 } from "@react-email/components";
 
 interface ResetPsswordProps {
-  email: string;
   username: string;
-  hashedToken: string;
+  content: string;
 }
 
-export default function ResetPasswordEmail({
-  email,
-  username,
-  hashedToken,
-}: ResetPsswordProps) {
+export default function MessageEmail({ username, content }: ResetPsswordProps) {
   return (
     <Html lang="en" dir="ltr">
       <Head>
-        <title>Reset Password</title>
+        <title>Here is a Mysterious Message.</title>
         <Font
           fontFamily="Roboto"
           fallbackFontFamily="Verdana"
@@ -44,23 +39,19 @@ export default function ResetPasswordEmail({
         </Row>
         <Row>
           <Text className="text-[16px] leading-[24px]">
-            We received a request to reset your password. To complete this
-            process, please click the button below.
+            You have received a mysterious question from a mysterious user.
           </Text>
+        </Row>
+        <Row>
+          <Text className="text-[16px] leading-[24px] mt-4">"{content}"</Text>
         </Row>
         <Row>
           <Button
-            href={`${process.env.DOMAIN}/reset-password?token=${hashedToken}`}
+            href={`${process.env.DOMAIN}/dashboard}`}
             className="text-[16px] leading-[24px] bg-indigo-400 text-white px-4 py-2 rounded-md hover:bg-indigo-500"
           >
-            Reset Password
+            Visit Dashboard
           </Button>
-        </Row>
-        <Row>
-          <Text className="text-[16px] leading-[24px] mt-4">
-            If you didn&apos;t request a password reset, please ignore this
-            email.
-          </Text>
         </Row>
       </Section>
     </Html>

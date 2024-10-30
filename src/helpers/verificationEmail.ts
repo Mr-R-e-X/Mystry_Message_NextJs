@@ -2,6 +2,7 @@ import { resend } from "@/lib/resend";
 import VerificationEmail from "../../emails/VerificationEmails";
 import { ApiResponse } from "@/types/apiResponse";
 import ResetPasswordEmail from "../../emails/PasswordResetEmail";
+import MessageEmail from "../../emails/MessageEmail";
 
 export async function sendVerificationEmail(
   email: string,
@@ -34,12 +35,33 @@ export async function sendForgotPasswordEmail(
     await resend.emails.send({
       from: process.env.RESEND_MAIL!,
       to: email,
-      subject: "Mystry Message || Forgot Password",
+      subject: "Mystry Message || Reset Password",
       react: ResetPasswordEmail({ username, email, hashedToken }),
     });
     return {
       success: true,
       message: `A reset password has been sent to ${email}`,
+    };
+  } catch (error) {
+    return { success: false, message: "Failed to send forgot password email" };
+  }
+}
+
+export async function messageReceived(
+  username: string,
+  content: string,
+  email: string
+): Promise<ApiResponse> {
+  try {
+    await resend.emails.send({
+      from: process.env.RESEND_MAIL!,
+      to: email,
+      subject: "Mystry Message || New message",
+      react: MessageEmail({ username, content }),
+    });
+    return {
+      success: true,
+      message: `A system generated mail has been sent to ${username}`,
     };
   } catch (error) {
     return { success: false, message: "Failed to send forgot password email" };

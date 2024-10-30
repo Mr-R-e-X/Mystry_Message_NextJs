@@ -141,7 +141,7 @@ const Signin = () => {
               Sign up{" "}
             </Link>
           </p>
-          <p>
+          <p className="mt-1">
             Forget Password?
             <Link
               href={"/forgot-password"}
