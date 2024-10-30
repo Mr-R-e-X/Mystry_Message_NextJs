@@ -32,12 +32,12 @@ const Navbar = () => {
               className="w-full md:w-auto cursor-pointer"
               onClick={() => signOut()}
             >
-              Logout
+              Sign Out
             </Button>
           </>
         ) : (
           <Link href="/sign-in" className="cursor-pointer">
-            <Button className="w-full md:w-auto ">Login</Button>
+            <Button className="w-full md:w-auto ">Sign In</Button>
           </Link>
         )}
       </div>
