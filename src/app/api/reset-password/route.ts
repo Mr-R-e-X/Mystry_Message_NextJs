@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import dbConnect from "@/lib/db.connect";
 import UserModel from "@/model/user.model";
+import { passwordChangedMail } from "@/helpers/verificationEmail";
 
 export async function POST(request: Request) {
   await dbConnect();
@@ -28,6 +29,7 @@ export async function POST(request: Request) {
     user.forgotPasswordToken = "";
     user.forgotPasswordTokenExpiry = new Date(1970, 6, 4);
     await user.save();
+    await passwordChangedMail(user.username, user.email);
     return Response.json(
       {
         success: true,

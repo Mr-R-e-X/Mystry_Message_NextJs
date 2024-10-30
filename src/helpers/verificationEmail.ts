@@ -3,6 +3,7 @@ import VerificationEmail from "../../emails/VerificationEmails";
 import { ApiResponse } from "@/types/apiResponse";
 import ResetPasswordEmail from "../../emails/PasswordResetEmail";
 import MessageEmail from "../../emails/MessageEmail";
+import PasswordChangedConfirmation from "../../emails/PasswordChangedConfirmation";
 
 export async function sendVerificationEmail(
   email: string,
@@ -65,5 +66,25 @@ export async function messageReceived(
     };
   } catch (error) {
     return { success: false, message: "Failed to send forgot password email" };
+  }
+}
+
+export async function passwordChangedMail(username: string, email: string) {
+  try {
+    await resend.emails.send({
+      from: process.env.RESEND_MAIL!,
+      to: email,
+      subject: "Mystry Message || Password Updated",
+      react: PasswordChangedConfirmation({ username, email }),
+    });
+    return {
+      success: true,
+      message: `A system generated mail has been sent to ${username}`,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: "Failed to send password changed email",
+    };
   }
 }
