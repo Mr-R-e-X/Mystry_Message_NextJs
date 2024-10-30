@@ -4,7 +4,7 @@ import { streamText } from "ai";
 import { NextResponse } from "next/server";
 
 const openAi = createOpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: process.env.OPENAI,
 });
 
 export const runtime = "edge";

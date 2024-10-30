@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-// import { toast } from "@/components/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -198,7 +197,7 @@ const MessagePage = () => {
               ))}
         </div>
       </div>
-      {/* <Separator className="my-4" /> */}
+
       <div className="flex flex-col justify-center items-center mt-4 gap-2">
         <p>Get Your Own Message Board</p>
         <Link href="/sign-up">
