@@ -184,15 +184,13 @@ const MessagePage = () => {
               ))
             : suggestionsMessage.map((message, index) => (
                 <div className="flex items-center justify-center" key={index}>
-                  <Button
-                    type="button"
+                  <span
                     className="border w-full p-2 my-3 mx-4 text-center text-base font-semibold tracking-tight rounded-md cursor-pointer"
-                    variant="outline"
                     onClick={() => setTextInputValue(message)}
                   >
                     {" "}
                     {message}{" "}
-                  </Button>
+                  </span>
                 </div>
               ))}
         </div>
