@@ -181,7 +181,7 @@ const MessagePage = () => {
           {isAiMessage
             ? Array.from({ length: 3 }).map((_, idx) => (
                 <div key={idx} className="flex items-center justify-center">
-                  <Skeleton className="border w-full p-8 my-3 mx-4 text-center text-base font-medium tracking-tight rounded-md cursor-pointer" />
+                  <Skeleton className="border w-full p-6 my-3 mx-4 text-center text-base font-medium tracking-tight rounded-md cursor-pointer" />
                 </div>
               ))
             : suggestionsMessage.map((message, index) => (
