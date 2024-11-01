@@ -30,7 +30,7 @@ const MessagePage = () => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isAiMessage, setIsAiMessage] = useState<boolean>(false);
   const [suggestionsMessage, setSuggestionsMessage] = useState<string[]>([]);
-  const [tempMessage, setTempMessage] = useState<string[]>([]);
+
   useEffect(() => {
     const messages = anyThreeMessages(dummyMessages);
     setSuggestionsMessage(messages);
@@ -81,17 +81,9 @@ const MessagePage = () => {
       console.log(response);
       const responseMessageArray = response.data?.split("||");
       if (responseMessageArray.length > 0) {
-        console.log(responseMessageArray);
-        // responseMessageArray.map((data: string) => {
-        //   const message = data.split(":")[1];
-        //   setTempMessage((prev) => [...prev, message]);
-        // });
         setSuggestionsMessage(responseMessageArray);
       }
-      if (tempMessage.length > 0) {
-        setSuggestionsMessage(responseMessageArray);
-        setTempMessage([]);
-      }
+
       toast({
         title: "Response generated.",
         variant: "default",
@@ -189,7 +181,7 @@ const MessagePage = () => {
           {isAiMessage
             ? Array.from({ length: 3 }).map((_, idx) => (
                 <div key={idx} className="flex items-center justify-center">
-                  <Skeleton className="border w-full p-4 my-3 mx-4 text-center text-base font-medium tracking-tight rounded-md cursor-pointer" />
+                  <Skeleton className="border w-full p-8 my-3 mx-4 text-center text-base font-medium tracking-tight rounded-md cursor-pointer" />
                 </div>
               ))
             : suggestionsMessage.map((message, index) => (
