@@ -30,7 +30,7 @@ const MessagePage = () => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isAiMessage, setIsAiMessage] = useState<boolean>(false);
   const [suggestionsMessage, setSuggestionsMessage] = useState<string[]>([]);
-
+  const [tempMessage, setTempMessage] = useState<string[]>([]);
   useEffect(() => {
     const messages = anyThreeMessages(dummyMessages);
     setSuggestionsMessage(messages);
@@ -78,9 +78,19 @@ const MessagePage = () => {
     setIsAiMessage(true);
     try {
       const response = await axios.post("/api/suggest-messages");
-      const responseMessageArray = response.data?.split("|| ");
+      console.log(response);
+      const responseMessageArray = response.data?.split("||");
       if (responseMessageArray.length > 0) {
+        console.log(responseMessageArray);
+        // responseMessageArray.map((data: string) => {
+        //   const message = data.split(":")[1];
+        //   setTempMessage((prev) => [...prev, message]);
+        // });
         setSuggestionsMessage(responseMessageArray);
+      }
+      if (tempMessage.length > 0) {
+        setSuggestionsMessage(responseMessageArray);
+        setTempMessage([]);
       }
       toast({
         title: "Response generated.",

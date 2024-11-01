@@ -31,7 +31,7 @@ const Home = () => {
         </p>
       </section>
       <Carousel
-        plugins={[Autoplay({ delay: 2500 })]}
+        plugins={[Autoplay({ delay: 3000 })]}
         className="w-full max-w-lg md:max-w-xl"
       >
         <CarouselContent>
