@@ -70,9 +70,10 @@ const VerifyAccount = () => {
           <h1 className="text-3xl font-extrabold tracking-tight lg:text-4xl mb-6">
             Verify Your Account
           </h1>
-          {/* <p className="mb-4">
-            Enter the verification code send to your email.
-          </p> */}
+          <p className="mb-4">
+            Check your inbox for a verification code! Didn’t get it? Take a
+            quick look in your spam folder – it might be hiding there!
+          </p>
         </div>
 
         <Form {...form}>

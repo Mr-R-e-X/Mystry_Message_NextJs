@@ -23,8 +23,8 @@ export async function POST(request: Request) {
       temperature: 0.8,
       topP: 0.9,
     });
-
-    return response.toTextStreamResponse();
+    // return response.toTextStreamResponse();
+    return response.toDataStreamResponse();
   } catch (error) {
     if (error instanceof OpenAI.APIError) {
       const { name, status, headers, message } = error;

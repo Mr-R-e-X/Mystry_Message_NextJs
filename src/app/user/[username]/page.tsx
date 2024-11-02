@@ -24,17 +24,35 @@ import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { ApiResponse } from "@/types/apiResponse";
 import Link from "next/link";
+import { useCompletion } from "ai/react";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+
+const parseStringMessage = (messageString: string): string[] => {
+  // console.log(JSON.stringify(messageString));
+  return messageString.split("||");
+};
 
 const MessagePage = () => {
   const { username } = useParams<{ username: string }>();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [isAiMessage, setIsAiMessage] = useState<boolean>(false);
-  const [suggestionsMessage, setSuggestionsMessage] = useState<string[]>([]);
+  // const [isAiMessage, setIsAiMessage] = useState<boolean>(false);
+  const [suggestionsMessage, setSuggestionsMessage] = useState<string>("");
 
   useEffect(() => {
     const messages = anyThreeMessages(dummyMessages);
+    console.log("Message after ueEffect", messages);
     setSuggestionsMessage(messages);
   }, []);
+
+  const {
+    complete,
+    completion,
+    isLoading: isSuggestionLoading,
+    error,
+  } = useCompletion({
+    api: "/api/suggest-messages",
+    initialCompletion: suggestionsMessage,
+  });
 
   const { toast } = useToast();
 
@@ -74,28 +92,36 @@ const MessagePage = () => {
     }
   };
 
-  const getMessagesFromAi = async () => {
-    setIsAiMessage(true);
-    try {
-      const response = await axios.post("/api/suggest-messages");
-      console.log(response);
-      const responseMessageArray = response.data?.split("||");
-      if (responseMessageArray.length > 0) {
-        setSuggestionsMessage(responseMessageArray);
-      }
+  // const getMessagesFromAi = async () => {
+  //   setIsAiMessage(true);
+  //   try {
+  //     const response = await axios.post("/api/suggest-messages");
+  //     console.log(response);
+  //     const responseMessageArray = response.data?.split("||");
+  //     if (responseMessageArray.length > 0) {
+  //       setSuggestionsMessage(responseMessageArray);
+  //     }
 
-      toast({
-        title: "Response generated.",
-        variant: "default",
-      });
+  //     toast({
+  //       title: "Response generated.",
+  //       variant: "default",
+  //     });
+  //   } catch (error) {
+  //     console.log("Error is AI messages --> ", error);
+  //     toast({
+  //       title: "Error generating response",
+  //       variant: "destructive",
+  //     });
+  //   } finally {
+  //     setIsAiMessage(false);
+  //   }
+  // };
+
+  const fetchMessagesFromAi = async () => {
+    try {
+      complete("");
     } catch (error) {
       console.log("Error is AI messages --> ", error);
-      toast({
-        title: "Error generating response",
-        variant: "destructive",
-      });
-    } finally {
-      setIsAiMessage(false);
     }
   };
 
@@ -161,11 +187,11 @@ const MessagePage = () => {
       <div>
         <div className="mx-auto w-max">
           <Button
-            onClick={getMessagesFromAi}
+            onClick={fetchMessagesFromAi}
             className="w-max font-normal text-base my-4"
-            disabled={isAiMessage}
+            disabled={isSuggestionLoading}
           >
-            {isAiMessage ? (
+            {isSuggestionLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Generating New
                 Suggestions
@@ -176,7 +202,7 @@ const MessagePage = () => {
           </Button>
         </div>
         <p className="mx-2 my-3">Click on any messages below to select it.</p>
-        <div className="border p-2 rounded-md">
+        {/* <div className="border p-2 rounded-md">
           <h1 className="text-2xl font-bold mx-4 tracking-tight"> Messages </h1>
           {isAiMessage
             ? Array.from({ length: 3 }).map((_, idx) => (
@@ -195,7 +221,32 @@ const MessagePage = () => {
                   </span>
                 </div>
               ))}
-        </div>
+        </div> */}
+        <Card>
+          <CardHeader>
+            <h1 className="text-2xl font-bold mx-4 tracking-tight">Messages</h1>
+          </CardHeader>
+          <CardContent className="flex flex-col space-y-4">
+            {error ? (
+              <p className="text-red-500"> {error.message} </p>
+            ) : (
+              parseStringMessage(completion).map((message, index) => (
+                <>
+                  {console.log(message)}
+                  <div className="flex items-center justify-center" key={index}>
+                    <span
+                      className="border w-full p-2 mx-4 text-center text-base font-semibold tracking-tight rounded-md cursor-pointer"
+                      onClick={() => setTextInputValue(message)}
+                    >
+                      {" "}
+                      {message}{" "}
+                    </span>
+                  </div>
+                </>
+              ))
+            )}
+          </CardContent>
+        </Card>
       </div>
 
       <div className="flex flex-col justify-center items-center mt-4 gap-2">

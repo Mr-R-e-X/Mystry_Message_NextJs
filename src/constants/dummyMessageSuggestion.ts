@@ -180,12 +180,16 @@ export function shuffleMessages(
   return messages;
 }
 
-export function anyThreeMessages(messages: DummyMessageObject[]): string[] {
-  const suggestionArray: string[] = [];
+export function anyThreeMessages(messages: DummyMessageObject[]): string {
+  let suggestion: string = "";
   for (let i = 0; i < 3; i++) {
     const randomIndex = Math.floor(Math.random() * 31);
-    suggestionArray.push(messages[randomIndex].message);
+    if (i == 2) {
+      suggestion = suggestion + messages[randomIndex].message;
+    } else {
+      suggestion = suggestion + messages[randomIndex].message + "||";
+    }
   }
-  return suggestionArray;
+  return suggestion;
 }
 export default dummyMessages;
